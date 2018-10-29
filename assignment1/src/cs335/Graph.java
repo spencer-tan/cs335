@@ -136,7 +136,7 @@ public class Graph {
             Node current = list.element(); //grabs the first element in the list and sets it to current node
             discovered[current.getElement()] = true; //set the discovered vertex to true in the discovered array
             System.out.println("Process Edge " + temp.getSrc() + " " + current);
-          //  while (current != null){
+          /*  while (current != null){
                 if((processed[current.getSrc()] == false) || graph.getDirected()){
                     processed[current.getSrc()] = true;
                 }
@@ -146,7 +146,7 @@ public class Graph {
                 }
                 list = adjlist[current.getElement()];
                 System.out.println("Process " + current.getElement() + " late");
-         //   }
+            }*/
         }
     } //end bfs
 }
