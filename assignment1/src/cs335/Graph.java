@@ -118,18 +118,18 @@ public class Graph {
     /**
      * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
      * @param graph the graph object to be searched
-     * @param startIndex the starting index of the graph
+     * @param start the starting vertex of the graph
      */
-    public void bfs(Graph graph, int startIndex){
+    public void bfs(Graph graph, int start){
         Queue<Node> q = new LinkedList<Node>(); //queue initialization of linked list of nodes
         boolean[] discovered = new boolean[this.verticies]; //boolean array of discovered, a vertex is discovered when it is queued
         boolean[] processed = new boolean[this.verticies]; //boolean array of processed, vertex is processed when it is dequeued
 
         LinkedList<Node>[] adjlist = graph.getList(); //grab the adjacency list
-        LinkedList<Node> list = adjlist[startIndex]; //grab the linked list at the starting index
-        Node head = new Node(startIndex);
+        LinkedList<Node> list = adjlist[start]; //grab the linked list at the starting index
+        Node head = new Node(start);
         q.add(head); //queue the head of the list
-        discovered[startIndex] = true; //head is now discovered
+        discovered[start] = true; //head is now discovered
         while(!(q.isEmpty())){ //while the queue is not empty
             Node temp = q.poll(); //dequeue the head
             System.out.println("Process " + temp + " early"); //discover head i.e. process 0 early
@@ -149,4 +149,23 @@ public class Graph {
             }*/
         }
     } //end bfs
+
+    /**
+     * Runs a Depth-First traversal of the graph. Prints out each vertex when each vertex is discovered/processed
+     * as well as when each edge is processed calls a helper function to traverse
+     * @param start the starting vertex
+     */
+    public void dfs(int start){
+        boolean[] visited = new boolean[this.verticies];
+        dfsUtil(start, visited);
+    }
+
+    public void dfsUtil(int start, boolean[] visited){
+        visited[start] = true; //set the starting vertex visited true
+        System.out.println("Processed " + start + " early ");
+
+        // Recur for all the vertices adjacent to this vertex and call dfsutil again if its not visited
+
+
+    }
 }
