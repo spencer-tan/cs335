@@ -168,16 +168,18 @@ public class Graph {
      */
     public void dfsUtil(int start, boolean[] visited){
         visited[start] = true; //set the starting vertex visited true
-        System.out.println("Processed " + start + " early ");
+        System.out.println("Process " + start + " early ");
 
         // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
         Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
         while (i.hasNext()) //while there is a next node
         {
             Node n = i.next(); //grab the node
-            System.out.println("Processing edge " + n.getSrc() + " " + n); //process the node
-            if (!visited[n.getElement()]) //if the node is not visited, call the function again
+            System.out.println("Process edge " + n.getSrc() + " " + n); //process the node
+            if (!visited[n.getElement()]) { //if the node is not visited, call the function again
                 dfsUtil(n.getElement(), visited);
+               // System.out.println("Process " + n.getElement() + " late");
+            }
         }
     }
 
