@@ -175,9 +175,9 @@ public class Graph {
         while (i.hasNext()) //while there is a next node
         {
             Node n = i.next(); //grab the node
-            System.out.println("Processing " + n); //process the node
-            if (!visited[n.getSrc()]) //if the node is not visited, call the function again
-                dfsUtil(n.getSrc(), visited);
+            System.out.println("Processing edge " + n.getSrc() + " " + n); //process the node
+            if (!visited[n.getElement()]) //if the node is not visited, call the function again
+                dfsUtil(n.getElement(), visited);
         }
     }
 
