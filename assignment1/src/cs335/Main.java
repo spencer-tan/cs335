@@ -9,7 +9,7 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         File file = new File("./src/CS335/test.txt"); //create file
-        int verticies = 0; //number of verticies
+        int verticies = 0; //number of verticiees
 
         Graph graph = new Graph(); //create a graph
         try {
