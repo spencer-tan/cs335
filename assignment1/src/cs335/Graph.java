@@ -158,7 +158,8 @@ public class Graph {
      */
     public void dfs(int start){
         boolean[] visited = new boolean[this.verticies];
-        dfsUtil(start, visited);
+        boolean[] discovered = new boolean[this.verticies];
+        dfsUtil(start, visited, discovered);
     }
 
     /**
@@ -166,7 +167,7 @@ public class Graph {
      * @param start
      * @param visited
      */
-    public void dfsUtil(int start, boolean[] visited){
+    public void dfsUtil(int start, boolean[] visited, boolean[] discovered){
         visited[start] = true; //set the starting vertex visited true
         System.out.println("Process " + start + " early ");
 
@@ -177,7 +178,9 @@ public class Graph {
             Node n = i.next(); //grab the node
             System.out.println("Process edge " + n.getSrc() + " " + n); //process the node
             if (!visited[n.getElement()]) { //if the node is not visited, call the function again
-                dfsUtil(n.getElement(), visited);
+                discovered[n.getSrc()] = true;
+                dfsUtil(n.getElement(), visited, discovered);
+                System.out.println("Process " + n + " late ");
                // System.out.println("Process " + n.getElement() + " late");
             }
         }
