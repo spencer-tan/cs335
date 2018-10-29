@@ -1,35 +1,75 @@
 package cs335;
 
-public class Node<E> {
-	private E element;
-	private Node<E> next;
+public class Node {
+	int dest; //element/node
+	double weight; //weight of the node if graph is weighted
+	int src; //index of the linked list that the node is at
 
-	public Node(E dataItem) {
-		element = dataItem;
-		next = null;
+	/**
+	 * Default Constructor
+	 */
+	public Node(){
+
 	}
 
-	public Node(E dataItem, Node<E> nodeRef) {
-		element = dataItem;
-		next = nodeRef;
+    /**
+     * Constructor to create a node with one element
+     * @param d the element to be inserted into the node
+     */
+	public Node(int d) {
+		dest = d;
 	}
 
-	public Node<E> setNext(Node<E> nodeRef) {
-		next = nodeRef;
-		return next;
+    /**
+     * Get the index of the list that the node is apart of
+     * @return integer for the index of the list that the node is in
+     */
+	public int getSrc() {
+		return src;
 	}
 
-	public E setElement(E dataItem) {
-		element = dataItem;
-		return element;
+    /**
+     * Set the index of the list
+     * @param i
+     */
+	public void setSrc(int i) {
+		src = i;
 	}
 
-	public E getElement() {
-		return element;
+    /**
+     * Set the weight of the node
+     * @param weight
+     */
+	public void setWeight(double weight) {
+		this.weight = weight;
 	}
 
-	public Node<E> getNext() {
-		// TODO Auto-generated method stub
-		return next;
+    /**
+     * Get the element in the node
+     * @return
+     */
+	public int getElement(){
+		return dest;
 	}
+
+    /**
+     * Get the weight of the node
+     * @return double the weight of the node
+     */
+	public double getWeight() {
+		return this.weight;
+	}
+
+    /**
+     * Print the contents of the node
+     * @return String of contents of the node
+     */
+	public String toString() {
+		if (weight == 0){
+			return (Integer.toString(dest) + " ");
+		} else {
+			return (dest + "|" + weight + " ");
+		}
+	}
+
 }
