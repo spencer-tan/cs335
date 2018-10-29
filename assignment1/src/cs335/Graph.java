@@ -2,6 +2,7 @@ package cs335;
 
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Iterator;
 
 public class Graph {
     int verticies; //number of verticies
@@ -160,12 +161,24 @@ public class Graph {
         dfsUtil(start, visited);
     }
 
+    /**
+     * Helper function to iterate over the list of nodes at the given vertex. Uses an iterator and checks to see if the node at the
+     * @param start
+     * @param visited
+     */
     public void dfsUtil(int start, boolean[] visited){
         visited[start] = true; //set the starting vertex visited true
         System.out.println("Processed " + start + " early ");
 
-        // Recur for all the vertices adjacent to this vertex and call dfsutil again if its not visited
-
-
+        // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
+        Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
+        while (i.hasNext()) //while there is a next node
+        {
+            Node n = i.next(); //grab the node
+            System.out.println("Processing " + n); //process the node
+            if (!visited[n.getSrc()]) //if the node is not visited, call the function again
+                dfsUtil(n.getSrc(), visited);
+        }
     }
+
 }
