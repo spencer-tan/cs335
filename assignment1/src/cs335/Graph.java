@@ -122,7 +122,41 @@ public class Graph {
      * @param start the starting vertex of the graph
      */
     public void bfs(Graph graph, int start){
-        Queue<Node> q = new LinkedList<Node>(); //queue initialization of linked list of nodes
+
+        // Mark all the vertices as not visited(By default
+        // set as false)
+        boolean visited[] = new boolean[this.verticies];
+        System.out.println("Process " + start + " early ");
+        // Create a queue for BFS
+        LinkedList<Node> queue = new LinkedList<Node>();
+
+        // Mark the current node as visited and enqueue it
+      //  LinkedList<Node>[] adjist = graph.getList(); //grab the adjacency list
+        Node node = new Node(start);
+        queue.add(node); //queue the head of the list
+
+        while (queue.size() != 0)
+        {
+            // Dequeue a vertex from queue and print it
+            node = queue.remove();
+            System.out.print(node +" ");
+
+            // Get all adjacent vertices of the dequeued vertex s
+            // If a adjacent has not been visited, then mark it
+            // visited and enqueue it
+            Iterator<Node> i = this.adjLists[start].listIterator();
+            while (i.hasNext())
+            {
+                Node n = i.next();
+                if (!visited[n.getElement()])
+                {
+                    visited[n.getSrc()] = true;
+                    queue.add(n);
+                }
+            }
+        }
+
+       /*  Queue<Node> q = new LinkedList<Node>(); //queue initialization of linked list of nodes
         boolean[] discovered = new boolean[this.verticies]; //boolean array of discovered, a vertex is discovered when it is queued
         boolean[] processed = new boolean[this.verticies]; //boolean array of processed, vertex is processed when it is dequeued
 
@@ -147,8 +181,8 @@ public class Graph {
                 }
                 list = adjlist[current.getElement()];
                 System.out.println("Process " + current.getElement() + " late");
-            }*/
-        }
+            }
+        } */
     } //end bfs
 
     /**
