@@ -1,7 +1,7 @@
 package cs335;
 
+import java.sql.SQLOutput;
 import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Iterator;
 
 public class Graph {
@@ -118,40 +118,46 @@ public class Graph {
 
     /**
      * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
-     * @param graph the graph object to be searched
      * @param start the starting vertex of the graph
      */
-    public void bfs(Graph graph, int start){
+    public void bfs(int start){
 
         // Mark all the vertices as not visited(By default
         // set as false)
-        boolean visited[] = new boolean[this.verticies];
-        System.out.println("Process " + start + " early ");
+        boolean[] visited = new boolean[verticies];
+        boolean[] discovered = new boolean[verticies];
         // Create a queue for BFS
         LinkedList<Node> queue = new LinkedList<Node>();
 
         // Mark the current node as visited and enqueue it
       //  LinkedList<Node>[] adjist = graph.getList(); //grab the adjacency list
         Node node = new Node(start);
+        visited[start] = true;
         queue.add(node); //queue the head of the list
+
 
         while (queue.size() != 0)
         {
             // Dequeue a vertex from queue and print it
             node = queue.remove();
-            System.out.print(node +" ");
+            System.out.println("Process " + node + " ");
 
             // Get all adjacent vertices of the dequeued vertex s
             // If a adjacent has not been visited, then mark it
             // visited and enqueue it
-            Iterator<Node> i = this.adjLists[start].listIterator();
+            Iterator<Node> i = adjLists[node.getElement()].listIterator();
             while (i.hasNext())
             {
                 Node n = i.next();
+                discovered[n.getSrc()] = true;
+                System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
                 if (!visited[n.getElement()])
                 {
-                    visited[n.getSrc()] = true;
+                    visited[n.getElement()] = true;
                     queue.add(n);
+                }
+                if(visited[node.getElement()] == true){
+                    System.out.println("Process " + node.getElement() + " late");
                 }
             }
         }
@@ -191,9 +197,10 @@ public class Graph {
      * @param start the starting vertex
      */
     public void dfs(int start){
-        boolean[] visited = new boolean[this.verticies];
-        boolean[] discovered = new boolean[this.verticies];
+        boolean[] visited = new boolean[verticies];
+        boolean[] discovered = new boolean[verticies];
         dfsUtil(start, visited, discovered);
+        System.out.println("Process " + start + " late ");
     }
 
     /**
@@ -203,10 +210,11 @@ public class Graph {
      */
     public void dfsUtil(int start, boolean[] visited, boolean[] discovered){
         visited[start] = true; //set the starting vertex visited true
+        int tempStart = 0;
         System.out.println("Process " + start + " early ");
 
         // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
-        Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
+        Iterator<Node> i = adjLists[start].listIterator(); //create an iterator to go through the list of nodes
         while (i.hasNext()) //while there is a next node
         {
             Node n = i.next(); //grab the node

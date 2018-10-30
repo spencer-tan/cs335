@@ -64,10 +64,10 @@ public class Main {
         System.out.println("-------Printing AdjList------"); //print the list
         System.out.println(graph.toString());
         System.out.println("-------BFS-------");
-        graph.bfs(graph, 0); //call bfs
-      /*  System.out.println();
+        graph.bfs(0); //call bfs
+        System.out.println();
         System.out.println("-------DFS-----");
-        graph.dfs(0); //call dfs */
+        graph.dfs(0); //call dfs
 
     } //end main
 
