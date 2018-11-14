@@ -1,6 +1,5 @@
 package cs335;
 
-import java.sql.SQLOutput;
 import java.util.LinkedList;
 import java.util.Iterator;
 
@@ -51,11 +50,11 @@ public class Graph {
                 nodeArray[j] = currNode;
                 for(int n = 0; n < nodeArray.length; n++) {
                     if(nodeArray[n] != null) {
-                        allNode += nodeArray[n];
+                        allNode += nodeArray[n].toStringWeight();
                     }
                 }
             }
-            result += i + ": " + allNode + "\n";
+            result += i + ": " + allNode + " \n";
         }
         return result;
     }
@@ -120,77 +119,52 @@ public class Graph {
      * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
      * @param start the starting vertex of the graph
      */
-    public void bfs(int start){
+    public void bfs(int start) {
 
-        // Mark all the vertices as not visited(By default
-        // set as false)
+        //Mark all the vertices as not visited(By default set as false)
         boolean[] visited = new boolean[verticies];
         boolean[] discovered = new boolean[verticies];
         // Create a queue for BFS
         LinkedList<Node> queue = new LinkedList<Node>();
 
         // Mark the current node as visited and enqueue it
-      //  LinkedList<Node>[] adjist = graph.getList(); //grab the adjacency list
+        //  LinkedList<Node>[] adjist = graph.getList(); //grab the adjacency list
         Node node = new Node(start);
-        visited[start] = true;
+        visited[node.getSrc()] = true;
         queue.add(node); //queue the head of the list
 
-
-        while (queue.size() != 0)
-        {
+        while (queue.size() != 0) {
             // Dequeue a vertex from queue and print it
-            node = queue.remove();
-            System.out.println("Process " + node + " ");
+            node = queue.poll();
+            System.out.println("Process " + node + " early");
 
             // Get all adjacent vertices of the dequeued vertex s
             // If a adjacent has not been visited, then mark it
             // visited and enqueue it
-            Iterator<Node> i = adjLists[node.getElement()].listIterator();
-            while (i.hasNext())
-            {
+            Iterator<Node> i = adjLists[node.getDest()].listIterator();
+            while (i.hasNext()) {
                 Node n = i.next();
                 discovered[n.getSrc()] = true;
-                System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
-                if (!visited[n.getElement()])
-                {
-                    visited[n.getElement()] = true;
+                //System.out.println("Node: " + n.toString());
+                if(directed) {
+                    if (discovered[n.getDest()]) {
+                    } else {
+                        System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+                    }
+                } else {
+                    System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+                }
+                if (!visited[n.getDest()]) {
+                    visited[n.getDest()] = true;
                     queue.add(n);
                 }
-                if(visited[node.getElement()] == true){
-                    System.out.println("Process " + node.getElement() + " late");
-                }
+
+            }
+            if (visited[node.getDest()] == true) {
+                System.out.println("Process " + node.getDest() + " late");
             }
         }
-
-       /*  Queue<Node> q = new LinkedList<Node>(); //queue initialization of linked list of nodes
-        boolean[] discovered = new boolean[this.verticies]; //boolean array of discovered, a vertex is discovered when it is queued
-        boolean[] processed = new boolean[this.verticies]; //boolean array of processed, vertex is processed when it is dequeued
-
-        LinkedList<Node>[] adjlist = graph.getList(); //grab the adjacency list
-        LinkedList<Node> list = adjlist[start]; //grab the linked list at the starting index
-        Node head = new Node(start);
-        q.add(head); //queue the head of the list
-        discovered[start] = true; //head is now discovered
-        while(!(q.isEmpty())){ //while the queue is not empty
-            Node temp = q.poll(); //dequeue the head
-            System.out.println("Process " + temp + " early"); //discover head i.e. process 0 early
-            Node current = list.element(); //grabs the first element in the list and sets it to current node
-            discovered[current.getElement()] = true; //set the discovered vertex to true in the discovered array
-            System.out.println("Process Edge " + temp.getSrc() + " " + current);
-          /*  while (current != null){
-                if((processed[current.getSrc()] == false) || graph.getDirected()){
-                    processed[current.getSrc()] = true;
-                }
-                if((discovered[current.getSrc()]) == false){
-                    q.add(current);
-                    discovered[current.getSrc()] = true;
-                }
-                list = adjlist[current.getElement()];
-                System.out.println("Process " + current.getElement() + " late");
-            }
-        } */
-    } //end bfs
-
+    }
     /**
      * Runs a Depth-First traversal of the graph. Prints out each vertex when each vertex is discovered/processed
      * as well as when each edge is processed calls a helper function to traverse
@@ -198,8 +172,7 @@ public class Graph {
      */
     public void dfs(int start){
         boolean[] visited = new boolean[verticies];
-        boolean[] discovered = new boolean[verticies];
-        dfsUtil(start, visited, discovered);
+        dfsUtil(start, visited);
         System.out.println("Process " + start + " late ");
     }
 
@@ -208,24 +181,46 @@ public class Graph {
      * @param start
      * @param visited
      */
-    public void dfsUtil(int start, boolean[] visited, boolean[] discovered){
+/*    public void dfsUtil(int start, boolean[] visited, boolean[] discovered){
         visited[start] = true; //set the starting vertex visited true
-        int tempStart = 0;
         System.out.println("Process " + start + " early ");
-
         // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
-        Iterator<Node> i = adjLists[start].listIterator(); //create an iterator to go through the list of nodes
+        Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
         while (i.hasNext()) //while there is a next node
         {
             Node n = i.next(); //grab the node
-            System.out.println("Process edge " + n.getSrc() + " " + n); //process the node
-            if (!visited[n.getElement()]) { //if the node is not visited, call the function again
+            if(discovered[n.getDest()]){
+            } else {
+                System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+            }
+            if (!visited[n.getDest()]) { //if the node is not visited, call the function again
                 discovered[n.getSrc()] = true;
-                dfsUtil(n.getElement(), visited, discovered);
+                dfsUtil(n.getDest(), visited, discovered);
                 System.out.println("Process " + n + " late ");
-               // System.out.println("Process " + n.getElement() + " late");
+                // System.out.println("Process " + n.getElement() + " late");
+            }
+        }
+    } */
+        public void dfsUtil(int start, boolean[] visited){
+        int[] parent =  new int[verticies];
+        visited[start] = true; //set the starting vertex visited true
+        System.out.println("Process " + start + " early ");
+        // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
+        Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
+        while (i.hasNext()) //while there is a next node
+        {
+            Node n = i.next(); //grab the node
+            parent[n.getDest()] = n.getSrc();
+            if(visited[n.getDest()]){
+            } else {
+                System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+            }
+            if (!visited[n.getDest()]) { //if the node is not visited, call the function again
+                visited[n.getDest()] = true;
+                dfsUtil(n.getDest(), visited);
+                System.out.println("Process " + n + " late ");
+                // System.out.println("Process " + n.getElement() + " late");
             }
         }
     }
-
 }

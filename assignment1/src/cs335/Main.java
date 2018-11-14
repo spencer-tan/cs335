@@ -41,6 +41,7 @@ public class Main {
             }
 
             while (scan.hasNextLine()) { // while the file has a next line in the file
+                double weight = 0;
                 String currentLine = scan.nextLine(); //grab the line
                 String strVert = currentLine.substring(0, 1); //get the vertex
                 int currVert = Integer.parseInt(strVert); //parse the vertex into an int
@@ -50,11 +51,20 @@ public class Main {
                 node.setSrc(currVert); //assign that node's source (the index of the list that the node is apart of) to the index (the vertex in this case is the source)
                 if(graph.getWeighted()) { //if the graph is weighted
                     String thisWeight = currentLine.substring(4); //get the weight
-                    double weight = Double.parseDouble(thisWeight); //parse it into a double
+                    weight = Double.parseDouble(thisWeight); //parse it into a double
                     node.setWeight(weight); //set the weight of the graph
                 }
                 if (adjLists != null){ //if the adjacency list is not null
                     adjLists[currVert].addFirst(node); //add the node to the list at the index that it's at
+                }
+                if(graph.getDirected()) {
+                    int tempVert = currVert;
+                    currVert = newDest;
+                    newDest = tempVert;
+                    Node newNode = new Node(newDest);
+                    newNode.setSrc(currVert);
+                    newNode.setWeight(weight);
+                    adjLists[currVert].addFirst(newNode);
                 }
                 graph.setList(adjLists); //set the adjacency list to the one we created
             }
@@ -64,10 +74,10 @@ public class Main {
         System.out.println("-------Printing AdjList------"); //print the list
         System.out.println(graph.toString());
         System.out.println("-------BFS-------");
-        graph.bfs(0); //call bfs
+        graph.bfs( 0); //call bfs
         System.out.println();
-        System.out.println("-------DFS-----");
-        graph.dfs(0); //call dfs
+         System.out.println("-------DFS-----");
+          graph.dfs(0); //call dfs
 
     } //end main
 
