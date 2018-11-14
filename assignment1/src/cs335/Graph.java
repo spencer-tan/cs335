@@ -176,51 +176,25 @@ public class Graph {
         System.out.println("Process " + start + " late ");
     }
 
-    /**
-     * Helper function to iterate over the list of nodes at the given vertex. Uses an iterator and checks to see if the node at the
-     * @param start
-     * @param visited
-     */
-/*    public void dfsUtil(int start, boolean[] visited, boolean[] discovered){
-        visited[start] = true; //set the starting vertex visited true
-        System.out.println("Process " + start + " early ");
-        // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
-        Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
-        while (i.hasNext()) //while there is a next node
-        {
-            Node n = i.next(); //grab the node
-            if(discovered[n.getDest()]){
-            } else {
-                System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+
+        public void dfsUtil(int v, boolean[] visited){
+            int[] parent =  new int[verticies]; //parent array
+            visited[v] = true; //set the starting vertex visited true
+            parent[v] = v; //set root to the starting vertex, usually 0
+            System.out.println("Process " + v + " early "); //process v early
+            // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
+            Iterator<Node> i = this.adjLists[v].listIterator(); //create an iterator to go through the list of nodes
+            while (i.hasNext()) //while there is a next node
+            {
+                Node n = i.next(); //grab the node
+                parent[n.getDest()] = v; //set the parent of the node to the previous node
+
+                if (!visited[n.getDest()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
+                    System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+                    visited[n.getDest()] = true;
+                    dfsUtil(n.getDest(), visited);
+                    System.out.println("Process " + n + " late ");
+                }
             }
-            if (!visited[n.getDest()]) { //if the node is not visited, call the function again
-                discovered[n.getSrc()] = true;
-                dfsUtil(n.getDest(), visited, discovered);
-                System.out.println("Process " + n + " late ");
-                // System.out.println("Process " + n.getElement() + " late");
-            }
-        }
-    } */
-        public void dfsUtil(int start, boolean[] visited){
-        int[] parent =  new int[verticies];
-        visited[start] = true; //set the starting vertex visited true
-        System.out.println("Process " + start + " early ");
-        // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
-        Iterator<Node> i = this.adjLists[start].listIterator(); //create an iterator to go through the list of nodes
-        while (i.hasNext()) //while there is a next node
-        {
-            Node n = i.next(); //grab the node
-            parent[n.getDest()] = n.getSrc();
-            if(visited[n.getDest()]){
-            } else {
-                System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
-            }
-            if (!visited[n.getDest()]) { //if the node is not visited, call the function again
-                visited[n.getDest()] = true;
-                dfsUtil(n.getDest(), visited);
-                System.out.println("Process " + n + " late ");
-                // System.out.println("Process " + n.getElement() + " late");
-            }
-        }
-    }
+         }
 }
