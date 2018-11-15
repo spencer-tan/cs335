@@ -76,8 +76,8 @@ public class Main {
         System.out.println("-------BFS-------");
         graph.bfs( 0); //call bfs
         System.out.println();
-         System.out.println("-------DFS-----");
-          graph.dfs(0); //call dfs
+        // System.out.println("-------DFS-----");
+        //  graph.dfs(0); //call dfs
 
     } //end main
 

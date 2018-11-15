@@ -25,7 +25,7 @@ public class Node {
 	 * Get the index of the list that the node is apart of
 	 * @return integer for the index of the list that the node is in
 	 */
-	public int getSrc() {
+	public int getV() {
 		return src;
 	}
 
@@ -49,7 +49,7 @@ public class Node {
 	 * Get the element in the node
 	 * @return
 	 */
-	public int getDest(){
+	public int getY(){
 		return dest;
 	}
 

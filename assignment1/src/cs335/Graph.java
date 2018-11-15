@@ -2,6 +2,7 @@ package cs335;
 
 import java.util.LinkedList;
 import java.util.Iterator;
+import java.util.*;
 
 public class Graph {
     int verticies; //number of verticies
@@ -117,84 +118,102 @@ public class Graph {
 
     /**
      * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
-     * @param start the starting vertex of the graph
+     * @param v the starting vertex of the graph
      */
-    public void bfs(int start) {
+    public void bfs(int v) {
 
         //Mark all the vertices as not visited(By default set as false)
-        boolean[] visited = new boolean[verticies];
+        boolean[] processed = new boolean[verticies];
         boolean[] discovered = new boolean[verticies];
+        int[] parent = new int[verticies];
         // Create a queue for BFS
         LinkedList<Node> queue = new LinkedList<Node>();
 
         // Mark the current node as visited and enqueue it
-        //  LinkedList<Node>[] adjist = graph.getList(); //grab the adjacency list
-        Node node = new Node(start);
-        visited[node.getSrc()] = true;
+        Node node = new Node(v);
         queue.add(node); //queue the head of the list
+        discovered[v] = true;
 
         while (queue.size() != 0) {
-            // Dequeue a vertex from queue and print it
-            node = queue.poll();
-            System.out.println("Process " + node + " early");
-
-            // Get all adjacent vertices of the dequeued vertex s
-            // If a adjacent has not been visited, then mark it
-            // visited and enqueue it
-            Iterator<Node> i = adjLists[node.getDest()].listIterator();
+            node = queue.poll(); // Get all adjacent vertices of the dequeued vertex s
+      //      System.out.println("node = " + node);
+      //      System.out.println("Process " + node + " early");
+            processed[node.getY()] = true;
+            Iterator<Node> i = adjLists[node.getY()].listIterator();
             while (i.hasNext()) {
                 Node n = i.next();
-                discovered[n.getSrc()] = true;
-                //System.out.println("Node: " + n.toString());
-                if(directed) {
-                    if (discovered[n.getDest()]) {
-                    } else {
-                        System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
+       /*         if (directed) {
+                    if ((!processed[n.getY()])) {
+                        parent[n.getY()] = n.getV()();
+                        if(parent[n.getV()()] == parent[n.getY()])
                     }
-                } else {
-                    System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
-                }
-                if (!visited[n.getDest()]) {
-                    visited[n.getDest()] = true;
-                    queue.add(n);
-                }
-
+                } else { */
+                    if ((!processed[n.getY()])) {
+                        System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
+                        System.out.println("parent at " + n.getV() + " = " + parent[n.getV()] + " and parent at " + n.getY() + " = " + parent[n.getY()]);
+                        if(parent[n.getV()] == parent[n.getY()] && (parent[n.getV()] != 0 || parent[n.getY()]!= 0)){
+                                System.out.println("Process edge " + n.getV() + " " + n + " (Cross Edge)"); //process the edge
+                        } else if (n.getY() != parent[n.getV()]) {
+                            System.out.println("Process edge " + n.getV() + " " + n + " (Tree Edge)"); //process the edge
+                        }
+                        parent[n.getY()] = n.getV();
+                    }
+              if(!discovered[n.getY()]){
+                  queue.add(n);
+                  discovered[n.getY()] = true;
+              }
             }
-            if (visited[node.getDest()] == true) {
-                System.out.println("Process " + node.getDest() + " late");
-            }
+            System.out.println("Process " + node.getY() + " late");
+         /*   System.out.println("Parent: " + Arrays.toString(parent));
+            if (discovered[node.getY()] == true) {
+                System.out.println("Process " + node.getY() + " late");
+            }*/
         }
     }
+
+    public void findPath(int start, int end, int parents[]) {
+        if ((start == end) || (end == -1)) {
+            System.out.println(start);
+         } else {
+             findPath(start,parents[end],parents);
+             System.out.println(end);
+        }
+    }
+
     /**
      * Runs a Depth-First traversal of the graph. Prints out each vertex when each vertex is discovered/processed
      * as well as when each edge is processed calls a helper function to traverse
      * @param start the starting vertex
      */
     public void dfs(int start){
-        boolean[] visited = new boolean[verticies];
-        dfsUtil(start, visited);
+        boolean[] discovered = new boolean[verticies];
+        boolean[] processed = new boolean[verticies];
+        int[] parent =  new int[verticies]; //parent array
+        dfsUtil(start, discovered, processed, parent);
         System.out.println("Process " + start + " late ");
     }
 
 
-        public void dfsUtil(int v, boolean[] visited){
-            int[] parent =  new int[verticies]; //parent array
-            visited[v] = true; //set the starting vertex visited true
-            parent[v] = v; //set root to the starting vertex, usually 0
-            System.out.println("Process " + v + " early "); //process v early
-            // Recur for all the vertices adjacent to this vertex and call dfsUtil again if its not visited
-            Iterator<Node> i = this.adjLists[v].listIterator(); //create an iterator to go through the list of nodes
-            while (i.hasNext()) //while there is a next node
-            {
-                Node n = i.next(); //grab the node
-                parent[n.getDest()] = v; //set the parent of the node to the previous node
+    public void dfsUtil(int v, boolean[] visited, boolean[] processed, int[] parent){
+        visited[v] = true; //set the starting vertex visited true
+        System.out.println("Process " + v + " early "); //process v early
+        Iterator<Node> i = this.adjLists[v].listIterator(); //create an iterator to go through the list of nodes
+        while (i.hasNext()) //while there is a next node
+        {
+            Node n = i.next(); //grab the node
 
-                if (!visited[n.getDest()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
-                    System.out.println("Process edge " + n.getSrc() + " " + n); //process the edge
-                    visited[n.getDest()] = true;
-                    dfsUtil(n.getDest(), visited);
-                    System.out.println("Process " + n + " late ");
+            if (!visited[n.getY()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
+                parent[n.getY()] = v; //set the parent of the node to the previous node
+                System.out.println("Process edge " + n.getV() + " " + n + " (Tree Edge)");
+                processed[v] = true;
+                dfsUtil(n.getY(), visited, processed, parent);
+                System.out.println("Process " + n + " late ");
+            } else if((!processed[n.getY()] && (parent[v] != n.getY()) || directed)) {
+                if (parent[n.getV()] != n.getY() && parent[n.getY()] == 0) {
+                    System.out.println("Process edge " + n.getV() + " " + n + " (Back Edge)");
                 }
+
             }
-         }
+        }
+    }
 }
