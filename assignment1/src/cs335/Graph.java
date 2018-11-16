@@ -135,9 +135,10 @@ public class Graph {
         discovered[v] = true;
 
         while (queue.size() != 0) {
+            Node head = queue.peekFirst();
             node = queue.poll(); // Get all adjacent vertices of the dequeued vertex s
       //      System.out.println("node = " + node);
-      //      System.out.println("Process " + node + " early");
+            System.out.println("Process " + node + " early");
             processed[node.getY()] = true;
             Iterator<Node> i = adjLists[node.getY()].listIterator();
             while (i.hasNext()) {
@@ -149,12 +150,15 @@ public class Graph {
                     }
                 } else { */
                     if ((!processed[n.getY()])) {
-                        System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
-                        System.out.println("parent at " + n.getV() + " = " + parent[n.getV()] + " and parent at " + n.getY() + " = " + parent[n.getY()]);
-                        if(parent[n.getV()] == parent[n.getY()] && (parent[n.getV()] != 0 || parent[n.getY()]!= 0)){
-                                System.out.println("Process edge " + n.getV() + " " + n + " (Cross Edge)"); //process the edge
+    //                    System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
+                        System.out.println("parent at " + n.getV() + ": " + parent[n.getV()] + " and parent at " + n.getY() + ": " + parent[n.getY()]);
+                        if(parent[n.getV()] == parent[n.getY()] && (parent[n.getV()] != head.getY())){
+                            System.out.println("head.getY = " + head.getY());
+                            System.out.println("Process edge " + n.getV() + " " + n + " (Cross Edge)"); //process the edge
                         } else if (n.getY() != parent[n.getV()]) {
                             System.out.println("Process edge " + n.getV() + " " + n + " (Tree Edge)"); //process the edge
+                        } else {
+                            System.out.println("Process edge " + n.getV() + " " + n + " (Back Edge)"); //process the edge
                         }
                         parent[n.getY()] = n.getV();
                     }
