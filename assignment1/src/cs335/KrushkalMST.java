@@ -355,12 +355,15 @@ public class KrushkalMST {
         }
 
         public void printGraph(ArrayList<Edge> edgeList){
+            double total = 0;
             for (int i = 0; i <edgeList.size() ; i++) {
                 Edge edge = edgeList.get(i);
                 System.out.println("Edge(" + edge.source +
-                        ", " + edge.destination +
+                        "," + edge.destination +
                         ") weight = " + edge.weight);
+                total = total + edge.weight;
             }
+            System.out.println("MST Total Cost: " + total);
         }
     } //ends graph class
 
