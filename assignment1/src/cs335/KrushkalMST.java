@@ -250,6 +250,43 @@ public class KrushkalMST {
             }
         }
 
+        /**
+         * Runs a Depth-First traversal of the graph. Prints out each vertex when each vertex is discovered/processed
+         * as well as when each edge is processed calls a helper function to traverse
+         * @param start the starting vertex
+         */
+        public void dfs(int start){
+            boolean[] discovered = new boolean[vertices];
+            boolean[] processed = new boolean[vertices];
+            int[] parent =  new int[vertices]; //parent array
+            dfsUtil(start, discovered, processed, parent);
+            System.out.println("Process " + start + " late ");
+        }
+
+
+        public void dfsUtil(int v, boolean[] visited, boolean[] processed, int[] parent){
+            visited[v] = true; //set the starting vertex visited true
+            System.out.println("Process " + v + " early "); //process v early
+            Iterator<Edge> i = this.adjLists[v].listIterator(); //create an iterator to go through the list of nodes
+            while (i.hasNext()) //while there is a next node
+            {
+                Edge e = i.next(); //grab the node
+
+                if (!visited[e.getDestination()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
+                    parent[e.getDestination()] = v; //set the parent of the node to the previous node
+                    System.out.println("Process edge " + e.getSource() + " " + e + " (Tree Edge)");
+                    processed[v] = true;
+                    dfsUtil(e.getDestination(), visited, processed, parent);
+                    System.out.println("Process " + e + " late ");
+                } else if((!processed[e.getDestination()] && (parent[v] != e.getDestination()) || directed)) {
+                    if (parent[e.getSource()] != e.getDestination() && parent[e.getDestination()] == 0) {
+                        System.out.println("Process edge " + e.getSource() + " " + e + " (Back Edge)");
+                    }
+
+                }
+            }
+        }
+
 
 
         public void addEdge(int source, int destination, double weight) {
@@ -328,7 +365,7 @@ public class KrushkalMST {
     } //ends graph class
 
     public static void main(String[] args) {
-        File file = new File("./src/CS335/test1.txt"); //create file
+        File file = new File("./src/CS335/test.txt"); //create file
         int vertices = 0; //number of vertices
 
         Graph graph = new Graph(); //create a graph
@@ -397,13 +434,9 @@ public class KrushkalMST {
         System.out.println("-------BFS-------");
         graph.bfs( 0); //call bfs
         System.out.println();
-//        graph.addEdge(0, 1, 4);
-//        graph.addEdge(0, 2, 3);
-//        graph.addEdge(1, 2, 1);
-//        graph.addEdge(1, 3, 2);
-//        graph.addEdge(2, 3, 4);
-//        graph.addEdge(3, 4, 2);
-//        graph.addEdge(4, 5, 6);
+        System.out.println("-------DFS-----");
+        graph.dfs(0); //call dfs
+        System.out.println();
         graph.kruskalMST();
     }
 }
