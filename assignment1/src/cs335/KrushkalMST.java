@@ -62,6 +62,10 @@ public class KrushkalMST {
             return destination;
         }
 
+        public double getWeight(){
+            return weight;
+        }
+
         /**
          * Print the contents of the edge with the weight
          * @return String of contents of the node
@@ -82,6 +86,7 @@ public class KrushkalMST {
 
     static class Graph {
         int vertices;
+        int edges;
         ArrayList<Edge> allEdges = new ArrayList<>();
         boolean weighted; // 1 if weighted 0 if unweighted
         boolean directed; //1 if directed 0 if undirected
@@ -105,30 +110,6 @@ public class KrushkalMST {
         public LinkedList<Edge>[] getList() {
             return adjLists;
         }
-        /**
-         * To string method to print the whole adjacency list.
-         * @return a string representation of the adjacency list
-         */
-        public String toString() {
-            String result = "";
-            for (int i = 0; i < vertices; i++) {
-                LinkedList<Edge> currList = adjLists[i];
-                Edge currEdge = new Edge();
-                String allNode = "";
-                for(int j = 0; j < currList.size(); j++) {
-                    currEdge = currList.get(j); //only gets head
-                    Edge[] edgeArray = new Edge[currList.size()];
-                    edgeArray[j] = currEdge;
-                    for(int n = 0; n < edgeArray.length; n++) {
-                        if(edgeArray[n] != null) {
-                            allNode += edgeArray[n].toStringWeight();
-                        }
-                    }
-                }
-                result += i + ": " + allNode + " \n";
-            }
-            return result;
-        }
 
         /**
          * Set vertices
@@ -136,6 +117,10 @@ public class KrushkalMST {
          */
         public void setVertices(int v) {
             vertices = v;
+        }
+
+        public int getEdges(){
+            return edges;
         }
 
         /**
@@ -176,6 +161,31 @@ public class KrushkalMST {
          */
         public void setList(LinkedList<Edge>[] list) {
             adjLists = list;
+        }
+
+        /**
+         * To string method to print the whole adjacency list.
+         * @return a string representation of the adjacency list
+         */
+        public String toString() {
+            String result = "";
+            for (int i = 0; i < vertices; i++) {
+                LinkedList<Edge> currList = adjLists[i];
+                Edge currEdge = new Edge();
+                String allNode = "";
+                for(int j = 0; j < currList.size(); j++) {
+                    currEdge = currList.get(j); //only gets head
+                    Edge[] edgeArray = new Edge[currList.size()];
+                    edgeArray[j] = currEdge;
+                    for(int n = 0; n < edgeArray.length; n++) {
+                        if(edgeArray[n] != null) {
+                            allNode += edgeArray[n].toStringWeight();
+                        }
+                    }
+                }
+                result += i + ": " + allNode + " \n";
+            }
+            return result;
         }
 
         /**
@@ -242,7 +252,7 @@ public class KrushkalMST {
 
 
 
-        public void addEdge(int source, int destination, int weight) {
+        public void addEdge(int source, int destination, double weight) {
             Edge edge = new Edge(source, destination, weight);
             allEdges.add(edge); //add to total edges
         }
@@ -376,7 +386,8 @@ public class KrushkalMST {
                     newEdge.setWeight(weight);
                     adjLists[currVert].addFirst(edge);
                 }
-                graph.setList(adjLists); //set the adjacency list to the one we created
+                graph.setList(adjLists); //set the adjacency list to the one we created for bfs/dfs
+                graph.addEdge(edge.getSource(), edge.getDestination(), edge.getWeight());
             }
         }catch(IOException exception) { //file exception if file cant be found
             System.out.println("File not found");
@@ -386,13 +397,13 @@ public class KrushkalMST {
         System.out.println("-------BFS-------");
         graph.bfs( 0); //call bfs
         System.out.println();
-        graph.addEdge(0, 1, 4);
-        graph.addEdge(0, 2, 3);
-        graph.addEdge(1, 2, 1);
-        graph.addEdge(1, 3, 2);
-        graph.addEdge(2, 3, 4);
-        graph.addEdge(3, 4, 2);
-        graph.addEdge(4, 5, 6);
+//        graph.addEdge(0, 1, 4);
+//        graph.addEdge(0, 2, 3);
+//        graph.addEdge(1, 2, 1);
+//        graph.addEdge(1, 3, 2);
+//        graph.addEdge(2, 3, 4);
+//        graph.addEdge(3, 4, 2);
+//        graph.addEdge(4, 5, 6);
         graph.kruskalMST();
     }
 }
