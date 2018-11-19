@@ -357,9 +357,9 @@ public class KrushkalMST {
         public void printGraph(ArrayList<Edge> edgeList){
             for (int i = 0; i <edgeList.size() ; i++) {
                 Edge edge = edgeList.get(i);
-                System.out.println("Edge-" + i + " source: " + edge.source +
-                        " destination: " + edge.destination +
-                        " weight: " + edge.weight);
+                System.out.println("Edge(" + edge.source +
+                        ", " + edge.destination +
+                        ") weight = " + edge.weight);
             }
         }
     } //ends graph class
