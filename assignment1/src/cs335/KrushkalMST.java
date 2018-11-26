@@ -15,7 +15,6 @@ public class KrushkalMST {
         int source;
         int destination;
         double weight;
-        boolean processed;
 
         public Edge(){
 
@@ -25,11 +24,10 @@ public class KrushkalMST {
             this.destination = destination;
         }
 
-        public Edge(int source, int destination, double weight, boolean processed) {
+        public Edge(int source, int destination, double weight) {
             this.source = source;
             this.destination = destination;
             this.weight = weight;
-            this.processed = processed;
         }
 
         /**
@@ -194,13 +192,6 @@ public class KrushkalMST {
          * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
          * @param v the starting vertex of the graph
          */
-
-
-        public void bfs(int v) {
-
-        }
-
-        /*
         public void bfs(int v) {
 
             //Mark all the vertices as not visited(By default set as false)
@@ -228,8 +219,8 @@ public class KrushkalMST {
                         parent[n.getDest()] = n.getSrc();
                         if(parent[n.getSrc()] == parent[n.getDest()])
                     }
-                } else {
-                    if ((!processed[n.getDestination()])){
+                } else { */
+                    if ((!processed[n.getDestination()]) || directed){
                         //             System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
                         //             System.out.println("parent at " + n.getSrc + ": " + parent[n.getSrc] + " and parent at " + n.getDest() + ": " + parent[n.getDest()]);
                         if((parent[n.getSource()] == parent[n.getDestination()] && parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)|| (parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)){
@@ -255,9 +246,9 @@ public class KrushkalMST {
          /*   System.out.println("Parent: " + Arrays.toString(parent));
             if (discovered[node.getDest()] == true) {
                 System.out.println("Process " + node.getDest() + " late");
+            }*/
             }
-            }
-        } */
+        }
 
         /**
          * Runs a Depth-First traversal of the graph. Prints out each vertex when each vertex is discovered/processed
@@ -471,22 +462,13 @@ public class KrushkalMST {
                     break;
 
                 case 4: answer = 4;
-                        graph.kruskalMST();
+                    graph.kruskalMST();
                     System.out.println();
-                        break;
+                    break;
 
                 case 5: answer = 5;
                     done = false;
             }
-
-            /*System.out.println("-------Printing AdjList------"); //print the list
-            System.out.println("-------BFS-------");
-            graph.bfs(0); //call bfs
-            System.out.println();
-            System.out.println("-------DFS-----");
-            graph.dfs(0); //call dfs
-            System.out.println();
-            graph.kruskalMST();*/
         }
     }
 }
