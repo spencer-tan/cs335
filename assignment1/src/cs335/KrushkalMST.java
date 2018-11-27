@@ -207,7 +207,6 @@ public class KrushkalMST {
             discovered[start] = true;
 
             while (queue.size() != 0) {
-                Edge head = queue.peekFirst();
                 edge = queue.poll(); // Get all adjacent vertices of the dequeued vertex s
                 System.out.println("Process " + edge + " early");
                 processed[edge.getDestination()] = true;
