@@ -167,7 +167,7 @@ public class KrushkalMST {
          * To string method to print the whole adjacency list.
          * @return a string representation of the adjacency list
          */
-        public String toString() {
+        public String printAdjList() {
             String result = "";
             for (int i = 0; i < vertices; i++) {
                 LinkedList<Edge> currList = adjLists[i];
@@ -432,14 +432,43 @@ public class KrushkalMST {
         }catch(IOException exception) { //file exception if file cant be found
             System.out.println("File not found");
         }
-        System.out.println("-------Printing AdjList------"); //print the list
-        System.out.println(graph.toString());
-        System.out.println("-------BFS-------");
-        graph.bfs( 0); //call bfs
-        System.out.println();
-        System.out.println("-------DFS-----");
-        graph.dfs(0); //call dfs
-        System.out.println();
-        graph.kruskalMST();
+        boolean done = true;
+        while (done) {
+            System.out.println("Choose one of the following options:");
+            System.out.println("1 - Print the Adjacency List");
+            System.out.println("2 - BFS");
+            System.out.println("3 - DFS");
+            System.out.println("4 - MST");
+            System.out.println("5 - Exit");
+            System.out.println();
+            Scanner scan = new Scanner(System.in);
+            int answer = scan.nextInt();
+            System.out.println();
+            switch(answer){
+
+                case 1: answer = 1;
+                    System.out.println(graph.printAdjList());
+                    System.out.println();
+                    break;
+
+                case 2: answer = 2;
+                    graph.bfs(0); //call bfs
+                    System.out.println();
+                    break;
+
+                case 3: answer = 3;
+                    graph.dfs(0); //call dfs
+                    System.out.println();
+                    break;
+
+                case 4: answer = 4;
+                    graph.kruskalMST();
+                    System.out.println();
+                    break;
+
+                case 5: answer = 5;
+                    done = false;
+            }
+        }
     }
 }
