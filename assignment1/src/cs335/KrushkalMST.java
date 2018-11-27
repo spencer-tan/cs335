@@ -277,7 +277,7 @@ public class KrushkalMST {
 
 
 
-        public void addEdge(int source, int destination, double weight) {
+        public void addKruskalEdge(int source, int destination, double weight) {
             Edge edge = new Edge(source, destination, weight);
             allEdges.add(edge); //add to total edges
         }
@@ -415,7 +415,7 @@ public class KrushkalMST {
                     adjLists[currVert].addFirst(edge);
                 }
                 graph.setList(adjLists); //set the adjacency list to the one we created for bfs/dfs
-                graph.addEdge(edge.getSource(), edge.getDestination(), edge.getWeight());
+                graph.addKruskalEdge(edge.getSource(), edge.getDestination(), edge.getWeight());
             }
         }catch(IOException exception) { //file exception if file cant be found
             System.out.println("File not found");
