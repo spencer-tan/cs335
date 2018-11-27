@@ -1,4 +1,4 @@
-package cs335;
+package CS335;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -66,6 +66,18 @@ public class KrushkalMST {
             return weight;
         }
 
+        /**
+         * Print the contents of the edge with the weight
+         * @return String of contents of the node
+         */
+        public String toStringWeight() {
+            if (weight == 0){
+                return (Integer.toString(destination) + " ");
+            } else {
+                return (destination + "(" + (int)weight + ") ");
+            }
+        }
+
         public String toString() {
             return (Integer.toString(destination));
         }
@@ -87,6 +99,10 @@ public class KrushkalMST {
 
         }
 
+        Graph(int vertices) {
+            this.vertices = vertices;
+        }
+
         /**
          * Gets the adjacency list
          * @return LinkedList<Edge> adjacency list
@@ -103,6 +119,9 @@ public class KrushkalMST {
             vertices = v;
         }
 
+        public int getEdges(){
+            return edges;
+        }
 
         /**
          * Get the weight of the graph
@@ -148,30 +167,32 @@ public class KrushkalMST {
          * To string method to print the whole adjacency list.
          * @return a string representation of the adjacency list
          */
-        public void printAdjList(){
-            for (int i = 0; i <vertices ; i++) {
-                if(adjLists[i].size()>0) {
-                    if(weighted){
-                        System.out.print(i + ": ");
-                        for (int j = 0; j < adjLists[i].size(); j++) {
-                            System.out.print(adjLists[i].get(j) + "(" + adjLists[i].get(j).getWeight() + ") ");
-                        }
-                        System.out.println();
-                    } else {
-                        System.out.print(i + ": ");
-                        for (int j = 0; j < adjLists[i].size(); j++){
-                            System.out.print(adjLists[i].get(j) + " ");
+        public String toString() {
+            String result = "";
+            for (int i = 0; i < vertices; i++) {
+                LinkedList<Edge> currList = adjLists[i];
+                Edge currEdge = new Edge();
+                String allNode = "";
+                for(int j = 0; j < currList.size(); j++) {
+                    currEdge = currList.get(j); //only gets head
+                    Edge[] edgeArray = new Edge[currList.size()];
+                    edgeArray[j] = currEdge;
+                    for(int n = 0; n < edgeArray.length; n++) {
+                        if(edgeArray[n] != null) {
+                            allNode += edgeArray[n].toStringWeight();
                         }
                     }
                 }
+                result += i + ": " + allNode + " \n";
             }
+            return result;
         }
 
         /**
          * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
          * @param v the starting vertex of the graph
          */
-        public void bfs(int start) {
+        public void bfs(int v) {
 
             //Mark all the vertices as not visited(By default set as false)
             boolean[] processed = new boolean[vertices];
@@ -181,41 +202,51 @@ public class KrushkalMST {
             LinkedList<Edge> queue = new LinkedList<Edge>();
 
             // Mark the current node as visited and enqueue it
-            Edge edge = new Edge(start);
+            Edge edge = new Edge(v);
             queue.add(edge); //queue the head of the list
-            discovered[start] = true;
+            discovered[v] = true;
 
             while (queue.size() != 0) {
+                Edge head = queue.peekFirst();
                 edge = queue.poll(); // Get all adjacent vertices of the dequeued vertex s
                 System.out.println("Process " + edge + " early");
                 processed[edge.getDestination()] = true;
                 Iterator<Edge> i = adjLists[edge.getDestination()].listIterator();
                 while (i.hasNext()) {
                     Edge n = i.next();
-                    if(!discovered[n.getDestination()]){
-                        queue.add(n);
-                        discovered[n.getDestination()] = true;
-                        parent[n.getDestination()] = n.getSource();
+       /*         if (directed) {
+                    if ((!processed[n.getDest()])) {
+                        parent[n.getDest()] = n.getSrc();
+                        if(parent[n.getSrc()] == parent[n.getDest()])
                     }
-                    if(!processed[n.getDestination()] || directed){
-                        processEdge(n.getSource(), n.getDestination(), parent, discovered, processed);
+                } else { */
+                    if ((!processed[n.getDestination()]) || directed){
+                        //             System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
+                        //             System.out.println("parent at " + n.getSrc + ": " + parent[n.getSrc] + " and parent at " + n.getDest() + ": " + parent[n.getDest()]);
+                        if((parent[n.getSource()] == parent[n.getDestination()] && parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)|| (parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)){
+                            //                  System.out.println("head.getDest = " + head.getDest());
+                            System.out.println("Process edge " + n.getSource() + " " + n + " (Cross Edge)"); //process the edge
+                        } else if (n.getDestination() != parent[n.getSource()]) {
+                            System.out.println("Process edge " + n.getSource() + " " + n + " (Tree Edge)"); //process the edge
+                        } else {
+                            System.out.println("Process edge " + n.getSource() + " " + n + " (Back Edge)"); //process the edge
+                        }
+                        if(n.getSource() == 0) {
+                            parent[n.getDestination()] = -1;
+                        } else {
+                            parent[n.getDestination()] = n.getSource();
+                        }
+                        if(!discovered[n.getDestination()]){
+                            queue.add(n);
+                            discovered[n.getDestination()] = true;
+                        }
                     }
                 }
                 System.out.println("Process " + edge.getDestination() + " late");
-            }
-        }
-
-        public void processEdge(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
-            System.out.println("Process Edge (" + x + " " + y + ") " + edgeClassification(x, y, parent, discovered, processed));
-        }
-
-        public String edgeClassification(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
-            if((parent[y] == x) || (parent[x] == y)){
-                return "Tree Edge";
-            } else if(discovered[y] && !processed[y]) {
-                return "Cross Edge";
-            } else {
-                return "Back Edge";
+         /*   System.out.println("Parent: " + Arrays.toString(parent));
+            if (discovered[node.getDest()] == true) {
+                System.out.println("Process " + node.getDest() + " late");
+            }*/
             }
         }
 
@@ -258,7 +289,7 @@ public class KrushkalMST {
 
 
 
-        public void addKruskalEdge(int source, int destination, double weight) {
+        public void addEdge(int source, int destination, double weight) {
             Edge edge = new Edge(source, destination, weight);
             allEdges.add(edge); //add to total edges
         }
@@ -380,64 +411,35 @@ public class KrushkalMST {
                 edge.setSource(currVert); //assign that node's source (the index of the list that the node is apart of) to the index (the vertex in this case is the source)
                 if(graph.getWeighted()) { //if the graph is weighted
                     String thisWeight = currentLine.substring(4); //get the weight
-                    weight = Double.parseDouble(thisWeight)gi; //parse it into a double
+                    weight = Double.parseDouble(thisWeight); //parse it into a double
                     edge.setWeight(weight); //set the weight of the graph
                 }
                 if (adjLists != null){ //if the adjacency list is not null
                     adjLists[currVert].addFirst(edge); //add the node to the list at the index that it's at
                 }
-                if(graph.getDirected()) {
+                if(!graph.getDirected()) {
                     int tempVert = currVert;
                     currVert = newDest;
                     newDest = tempVert;
                     Edge newEdge = new Edge(newDest);
                     newEdge.setSource(currVert);
                     newEdge.setWeight(weight);
-                    adjLists[currVert].addFirst(edge);
+                    adjLists[currVert].addFirst(newEdge);
                 }
                 graph.setList(adjLists); //set the adjacency list to the one we created for bfs/dfs
-                graph.addKruskalEdge(edge.getSource(), edge.getDestination(), edge.getWeight());
+                graph.addEdge(edge.getSource(), edge.getDestination(), edge.getWeight());
             }
         }catch(IOException exception) { //file exception if file cant be found
             System.out.println("File not found");
         }
-        boolean done = true;
-        while (done) {
-            System.out.println("Choose one of the following options:");
-            System.out.println("1 - Print the Adjacency List");
-            System.out.println("2 - BFS");
-            System.out.println("3 - DFS");
-            System.out.println("4 - MST");
-            System.out.println("5 - Exit");
-            System.out.println();
-            Scanner scan = new Scanner(System.in);
-            int answer = scan.nextInt();
-            System.out.println();
-            switch(answer){
-
-                case 1: answer = 1;
-                    graph.printAdjList();
-                    System.out.println();
-                    break;
-
-                case 2: answer = 2;
-                    graph.bfs(0); //call bfs
-                    System.out.println();
-                    break;
-
-                case 3: answer = 3;
-                    graph.dfs(0); //call dfs
-                    System.out.println();
-                    break;
-
-                case 4: answer = 4;
-                    graph.kruskalMST();
-                    System.out.println();
-                    break;
-
-                case 5: answer = 5;
-                    done = false;
-            }
-        }
+        System.out.println("-------Printing AdjList------"); //print the list
+        System.out.println(graph.toString());
+        System.out.println("-------BFS-------");
+        graph.bfs( 0); //call bfs
+        System.out.println();
+        System.out.println("-------DFS-----");
+        graph.dfs(0); //call dfs
+        System.out.println();
+        graph.kruskalMST();
     }
 }
