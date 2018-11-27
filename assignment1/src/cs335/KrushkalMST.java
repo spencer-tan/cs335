@@ -209,12 +209,6 @@ public class KrushkalMST {
                 Iterator<Edge> i = adjLists[edge.getDestination()].listIterator();
                 while (i.hasNext()) {
                     Edge n = i.next();
-       /*         if (directed) {
-                    if ((!processed[n.getDest()])) {
-                        parent[n.getDest()] = n.getSrc();
-                        if(parent[n.getSrc()] == parent[n.getDest()])
-                    }
-                } else { */
                     if(!discovered[n.getDestination()]){
                         queue.add(n);
                         discovered[n.getDestination()] = true;
@@ -225,17 +219,30 @@ public class KrushkalMST {
                     }
                 }
                 System.out.println("Process " + edge.getDestination() + " late");
-         /*   System.out.println("Parent: " + Arrays.toString(parent));
-            if (discovered[node.getDest()] == true) {
-                System.out.println("Process " + node.getDest() + " late");
-            }*/
             }
         }
 
+        /**
+         * Helper function to print the edge
+         * @param x the source
+         * @param y the destination
+         * @param parent int parent array
+         * @param discovered discovered boolean array
+         * @param processed processed boolean array
+         */
         public void processEdgeBFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
             System.out.println("Process Edge " + x + " " + y + " (" + edgeClassificationForBFS(x, y, parent, discovered, processed) + ")");
         }
 
+        /**
+         * Helper function to print the type of edge
+         * @param x the source
+         * @param y the destination
+         * @param parent int parent array
+         * @param discovered discovered boolean array
+         * @param processed processed boolean array
+         * @return
+         */
         public String edgeClassificationForBFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
             if((parent[y] == x) || (parent[x] == y)){
                 return "Tree Edge";
@@ -260,37 +267,34 @@ public class KrushkalMST {
         }
 
 
-        public void dfsUtil(int v, boolean[] discovered, boolean[] processed, int[] parent){
-            discovered[v] = true; //set the starting vertex visited true
+        public void dfsUtil(int v, boolean[] visited, boolean[] processed, int[] parent){
+            visited[v] = true; //set the starting vertex visited true
             System.out.println("Process " + v + " early "); //process v early
             Iterator<Edge> i = this.adjLists[v].listIterator(); //create an iterator to go through the list of nodes
             while (i.hasNext()) //while there is a next node
             {
-                Edge e = i.next(); //grab the node
+                Edge n = i.next(); //grab the node
+                //System.out.println("Parent of: " + n.getSource() + " is " + parent[n.getSource()]);
 
-                if (!discovered[e.getDestination()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
-                    parent[e.getDestination()] = v; //set the parent of the node to the previous node
-                    processEdgeDFS(e.getSource(),e.getDestination(), parent, discovered, processed);
+                if (!visited[n.getDestination()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
+                    parent[n.getDestination()] = v; //set the parent of the node to the previous node
+                    System.out.println("Process edge " + n.getSource() + " " + n + " (Tree Edge)");
                     processed[v] = true;
-                    dfsUtil(e.getDestination(), discovered, processed, parent);
-                    System.out.println("Process " + e + " late ");
+                    dfsUtil(n.getDestination(), visited, processed, parent);
+                    System.out.println("Process " + n + " late ");
+                } else if((!processed[n.getSource()])|| directed) {
+                    if(!getDirected()) {
+                        if (parent[n.getSource()] != n.getDestination() && parent[n.getDestination()] == 0) {
+                            System.out.println("Process edge " + n.getSource() + " " + n + " (Back Edge)");
+                        }
+                    } else {
+                        System.out.println("Process edge " + n.getSource() + " " + n + " (Back Edge)");
+                    }
+
                 }
             }
         }
 
-        public void processEdgeDFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
-            System.out.println("Process Edge " + x + " " + y + " (" + edgeClassificationForDFS(x, y, parent, discovered, processed) + ")");
-        }
-
-        public String edgeClassificationForDFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
-            if((parent[y] == x) || (parent[x] == y)){
-                return "Tree Edge";
-            }
-            if(discovered[y] && !processed[y]){
-                return "Cross Edge";
-            }
-            return "Back Edge";
-        }
 
 
 
@@ -373,7 +377,7 @@ public class KrushkalMST {
     } //ends graph class
 
     public static void main(String[] args) {
-        File file = new File("./src/CS335/test.txt"); //create file
+        File file = new File("./src/CS335/test3.txt"); //create file
         int vertices = 0; //number of vertices
 
         Graph graph = new Graph(); //create a graph
