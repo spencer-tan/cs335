@@ -220,26 +220,13 @@ public class KrushkalMST {
                         if(parent[n.getSrc()] == parent[n.getDest()])
                     }
                 } else { */
-                    if ((!processed[n.getDestination()]) || directed){
-                        //             System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
-                        //             System.out.println("parent at " + n.getSrc + ": " + parent[n.getSrc] + " and parent at " + n.getDest() + ": " + parent[n.getDest()]);
-                        if((parent[n.getSource()] == parent[n.getDestination()] && parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)|| (parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)){
-                            //                  System.out.println("head.getDest = " + head.getDest());
-                            System.out.println("Process edge " + n.getSource() + " " + n + " (Cross Edge)"); //process the edge
-                        } else if (n.getDestination() != parent[n.getSource()]) {
-                            System.out.println("Process edge " + n.getSource() + " " + n + " (Tree Edge)"); //process the edge
-                        } else {
-                            System.out.println("Process edge " + n.getSource() + " " + n + " (Back Edge)"); //process the edge
-                        }
-                        if(n.getSource() == 0) {
-                            parent[n.getDestination()] = -1;
-                        } else {
-                            parent[n.getDestination()] = n.getSource();
-                        }
-                        if(!discovered[n.getDestination()]){
-                            queue.add(n);
-                            discovered[n.getDestination()] = true;
-                        }
+                    if(!discovered[n.getDestination()]){
+                        queue.add(n);
+                        discovered[n.getDestination()] = true;
+                        parent[n.getDestination()] = n.getSource();
+                    }
+                    if((!processed[n.getDestination()]) || directed){
+                        processEdge(n.getSource(), n.getDestination(), parent, discovered, processed);
                     }
                 }
                 System.out.println("Process " + edge.getDestination() + " late");
@@ -248,6 +235,20 @@ public class KrushkalMST {
                 System.out.println("Process " + node.getDest() + " late");
             }*/
             }
+        }
+
+        public void processEdge(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            System.out.println("Process Edge " + x + " " + y + " (" + edgeClassification(x, y, parent, discovered, processed) + ")");
+        }
+
+        public String edgeClassification(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            if((parent[y] == x) || (parent[x] == y)){
+                return "Tree Edge";
+            }
+            if(discovered[y] && !processed[y]){
+                return "Cross Edge";
+            }
+            return "Back Edge";
         }
 
         /**
