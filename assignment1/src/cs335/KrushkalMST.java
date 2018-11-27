@@ -1,4 +1,4 @@
-package CS335;
+package cs335;
 
 import java.util.ArrayList;
 import java.util.Comparator;
