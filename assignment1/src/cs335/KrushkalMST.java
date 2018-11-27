@@ -66,18 +66,6 @@ public class KrushkalMST {
             return weight;
         }
 
-        /**
-         * Print the contents of the edge with the weight
-         * @return String of contents of the node
-         */
-        public String toStringWeight() {
-            if (weight == 0){
-                return (Integer.toString(destination) + " ");
-            } else {
-                return (destination + "(" + (int)weight + ") ");
-            }
-        }
-
         public String toString() {
             return (Integer.toString(destination));
         }
@@ -99,10 +87,6 @@ public class KrushkalMST {
 
         }
 
-        Graph(int vertices) {
-            this.vertices = vertices;
-        }
-
         /**
          * Gets the adjacency list
          * @return LinkedList<Edge> adjacency list
@@ -119,9 +103,6 @@ public class KrushkalMST {
             vertices = v;
         }
 
-        public int getEdges(){
-            return edges;
-        }
 
         /**
          * Get the weight of the graph
@@ -399,7 +380,7 @@ public class KrushkalMST {
                 edge.setSource(currVert); //assign that node's source (the index of the list that the node is apart of) to the index (the vertex in this case is the source)
                 if(graph.getWeighted()) { //if the graph is weighted
                     String thisWeight = currentLine.substring(4); //get the weight
-                    weight = Double.parseDouble(thisWeight); //parse it into a double
+                    weight = Double.parseDouble(thisWeight)gi; //parse it into a double
                     edge.setWeight(weight); //set the weight of the graph
                 }
                 if (adjLists != null){ //if the adjacency list is not null
