@@ -167,25 +167,23 @@ public class KrushkalMST {
          * To string method to print the whole adjacency list.
          * @return a string representation of the adjacency list
          */
-        public String toString() {
-            String result = "";
-            for (int i = 0; i < vertices; i++) {
-                LinkedList<Edge> currList = adjLists[i];
-                Edge currEdge = new Edge();
-                String allNode = "";
-                for(int j = 0; j < currList.size(); j++) {
-                    currEdge = currList.get(j); //only gets head
-                    Edge[] edgeArray = new Edge[currList.size()];
-                    edgeArray[j] = currEdge;
-                    for(int n = 0; n < edgeArray.length; n++) {
-                        if(edgeArray[n] != null) {
-                            allNode += edgeArray[n].toStringWeight();
+        public void printAdjList(){
+            for (int i = 0; i <vertices ; i++) {
+                if(adjLists[i].size()>0) {
+                    if(weighted){
+                        System.out.print(i + ": ");
+                        for (int j = 0; j < adjLists[i].size(); j++) {
+                            System.out.print(adjLists[i].get(j) + "(" + adjLists[i].get(j).getWeight() + ") ");
+                        }
+                        System.out.println();
+                    } else {
+                        System.out.print(i + ": ");
+                        for (int j = 0; j < adjLists[i].size(); j++){
+                            System.out.print(adjLists[i].get(j) + " ");
                         }
                     }
                 }
-                result += i + ": " + allNode + " \n";
             }
-            return result;
         }
 
         /**
@@ -437,7 +435,7 @@ public class KrushkalMST {
             switch(answer){
 
                 case 1: answer = 1;
-                    System.out.println(graph.toString());
+                    graph.printAdjList();
                     System.out.println();
                     break;
 
