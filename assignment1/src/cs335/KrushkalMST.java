@@ -1,12 +1,7 @@
 package cs335;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.PriorityQueue;
-import java.util.LinkedList;
-import java.util.Iterator;
+import java.util.*;
 import java.io.File;
-import java.util.Scanner;
 import java.io.IOException;
 
 public class KrushkalMST {
@@ -265,27 +260,36 @@ public class KrushkalMST {
         }
 
 
-        public void dfsUtil(int v, boolean[] visited, boolean[] processed, int[] parent){
-            visited[v] = true; //set the starting vertex visited true
+        public void dfsUtil(int v, boolean[] discovered, boolean[] processed, int[] parent){
+            discovered[v] = true; //set the starting vertex visited true
             System.out.println("Process " + v + " early "); //process v early
             Iterator<Edge> i = this.adjLists[v].listIterator(); //create an iterator to go through the list of nodes
             while (i.hasNext()) //while there is a next node
             {
                 Edge e = i.next(); //grab the node
 
-                if (!visited[e.getDestination()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
+                if (!discovered[e.getDestination()]) { //if the node is not visited, print the edge, set the node as visited, and call the function again
                     parent[e.getDestination()] = v; //set the parent of the node to the previous node
-                    System.out.println("Process edge " + e.getSource() + " " + e + " (Tree Edge)");
+                    processEdgeDFS(e.getSource(),e.getDestination(), parent, discovered, processed);
                     processed[v] = true;
-                    dfsUtil(e.getDestination(), visited, processed, parent);
+                    dfsUtil(e.getDestination(), discovered, processed, parent);
                     System.out.println("Process " + e + " late ");
-                } else if((!processed[e.getDestination()] && (parent[v] != e.getDestination()) || directed)) {
-                    if (parent[e.getSource()] != e.getDestination() && parent[e.getDestination()] == 0) {
-                        System.out.println("Process edge " + e.getSource() + " " + e + " (Back Edge)");
-                    }
-
                 }
             }
+        }
+
+        public void processEdgeDFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            System.out.println("Process Edge " + x + " " + y + " (" + edgeClassificationForDFS(x, y, parent, discovered, processed) + ")");
+        }
+
+        public String edgeClassificationForDFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            if((parent[y] == x) || (parent[x] == y)){
+                return "Tree Edge";
+            }
+            if(discovered[y] && !processed[y]){
+                return "Cross Edge";
+            }
+            return "Back Edge";
         }
 
 
@@ -443,32 +447,40 @@ public class KrushkalMST {
             System.out.println("5 - Exit");
             System.out.println();
             Scanner scan = new Scanner(System.in);
-            int answer = scan.nextInt();
-            System.out.println();
-            switch(answer){
+            try {
+                int answer = scan.nextInt();
+                if(answer > 5 || answer < 1){
+                    System.out.println("Error, please enter a number from 1-5");
+                }
+                System.out.println();
+                switch (answer) {
 
-                case 1: answer = 1;
-                    System.out.println(graph.printAdjList());
-                    System.out.println();
-                    break;
+                    case 1:
+                        System.out.println(graph.printAdjList());
+                        System.out.println();
+                        break;
 
-                case 2: answer = 2;
-                    graph.bfs(0); //call bfs
-                    System.out.println();
-                    break;
+                    case 2:
+                        graph.bfs(0); //call bfs
+                        System.out.println();
+                        break;
 
-                case 3: answer = 3;
-                    graph.dfs(0); //call dfs
-                    System.out.println();
-                    break;
+                    case 3:
+                        graph.dfs(0); //call dfs
+                        System.out.println();
+                        break;
 
-                case 4: answer = 4;
-                    graph.kruskalMST();
-                    System.out.println();
-                    break;
+                    case 4:
+                        graph.kruskalMST();
+                        System.out.println();
+                        break;
 
-                case 5: answer = 5;
-                    done = false;
+                    case 5:
+                        done = false;
+                }
+            } catch(InputMismatchException e){
+                System.out.println("Error, you did not enter a number, please try again.");
+                System.out.println();
             }
         }
     }
