@@ -226,7 +226,7 @@ public class KrushkalMST {
                         parent[n.getDestination()] = n.getSource();
                     }
                     if((!processed[n.getDestination()]) || directed){
-                        processEdge(n.getSource(), n.getDestination(), parent, discovered, processed);
+                        processEdgeBFS(n.getSource(), n.getDestination(), parent, discovered, processed);
                     }
                 }
                 System.out.println("Process " + edge.getDestination() + " late");
@@ -237,11 +237,11 @@ public class KrushkalMST {
             }
         }
 
-        public void processEdge(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
-            System.out.println("Process Edge " + x + " " + y + " (" + edgeClassification(x, y, parent, discovered, processed) + ")");
+        public void processEdgeBFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            System.out.println("Process Edge " + x + " " + y + " (" + edgeClassificationForBFS(x, y, parent, discovered, processed) + ")");
         }
 
-        public String edgeClassification(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+        public String edgeClassificationForBFS(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
             if((parent[y] == x) || (parent[x] == y)){
                 return "Tree Edge";
             }
