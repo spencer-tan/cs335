@@ -192,7 +192,7 @@ public class KrushkalMST {
          * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
          * @param v the starting vertex of the graph
          */
-        public void bfs(int v) {
+        public void bfs(int start) {
 
             //Mark all the vertices as not visited(By default set as false)
             boolean[] processed = new boolean[vertices];
@@ -202,9 +202,9 @@ public class KrushkalMST {
             LinkedList<Edge> queue = new LinkedList<Edge>();
 
             // Mark the current node as visited and enqueue it
-            Edge edge = new Edge(v);
+            Edge edge = new Edge(start);
             queue.add(edge); //queue the head of the list
-            discovered[v] = true;
+            discovered[start] = true;
 
             while (queue.size() != 0) {
                 Edge head = queue.peekFirst();
@@ -214,39 +214,30 @@ public class KrushkalMST {
                 Iterator<Edge> i = adjLists[edge.getDestination()].listIterator();
                 while (i.hasNext()) {
                     Edge n = i.next();
-       /*         if (directed) {
-                    if ((!processed[n.getDest()])) {
-                        parent[n.getDest()] = n.getSrc();
-                        if(parent[n.getSrc()] == parent[n.getDest()])
+                    if(!discovered[n.getDestination()]){
+                        queue.add(n);
+                        discovered[n.getDestination()] = true;
+                        parent[n.getDestination()] = n.getSource();
                     }
-                } else { */
-                    if ((!processed[n.getDestination()]) || directed){
-                        //             System.out.println("Parent Array: " + Arrays.toString(parent)); // Dequeue a vertex from queue and print it
-                        //             System.out.println("parent at " + n.getSrc + ": " + parent[n.getSrc] + " and parent at " + n.getDest() + ": " + parent[n.getDest()]);
-                        if((parent[n.getSource()] == parent[n.getDestination()] && parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)|| (parent[n.getSource()] == -1 && parent[n.getDestination()] == -1)){
-                            //                  System.out.println("head.getDest = " + head.getDest());
-                            System.out.println("Process edge " + n.getSource() + " " + n + " (Cross Edge)"); //process the edge
-                        } else if (n.getDestination() != parent[n.getSource()]) {
-                            System.out.println("Process edge " + n.getSource() + " " + n + " (Tree Edge)"); //process the edge
-                        } else {
-                            System.out.println("Process edge " + n.getSource() + " " + n + " (Back Edge)"); //process the edge
-                        }
-                        if(n.getSource() == 0) {
-                            parent[n.getDestination()] = -1;
-                        } else {
-                            parent[n.getDestination()] = n.getSource();
-                        }
-                        if(!discovered[n.getDestination()]){
-                            queue.add(n);
-                            discovered[n.getDestination()] = true;
-                        }
+                    if(!processed[n.getDestination()] || directed){
+                        processEdge(n.getSource(), n.getDestination(), parent, discovered, processed);
                     }
                 }
                 System.out.println("Process " + edge.getDestination() + " late");
-         /*   System.out.println("Parent: " + Arrays.toString(parent));
-            if (discovered[node.getDest()] == true) {
-                System.out.println("Process " + node.getDest() + " late");
-            }*/
+            }
+        }
+
+        public void processEdge(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            System.out.println("Process Edge (" + x + " " + y + ") " + edgeClassification(x, y, parent, discovered, processed));
+        }
+
+        public String edgeClassification(int x, int y, int[] parent, boolean[] discovered, boolean[] processed){
+            if((parent[y] == x) || (parent[x] == y)){
+                return "Tree Edge";
+            } else if(discovered[y] && !processed[y]) {
+                return "Cross Edge";
+            } else {
+                return "Back Edge";
             }
         }
 
