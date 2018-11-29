@@ -86,16 +86,12 @@ public class KrushkalMST {
         boolean weighted; // 1 if weighted 0 if unweighted
         boolean directed; //1 if directed 0 if undirected
         LinkedList<Edge> adjLists[]; //linked list of nodes
-
+        boolean[] allDiscovered;
         /**
          * Default Constructor
          */
         public Graph() {
 
-        }
-
-        Graph(int vertices) {
-            this.vertices = vertices;
         }
 
         /**
@@ -158,6 +154,16 @@ public class KrushkalMST {
             adjLists = list;
         }
 
+        public boolean[] getAllDiscovered(){
+            return allDiscovered;
+        }
+
+        public void setAllDiscovered(boolean[] d) {
+            allDiscovered = d.clone();
+        }
+
+
+
         /**
          * To string method to print the whole adjacency list.
          * @return a string representation of the adjacency list
@@ -187,10 +193,9 @@ public class KrushkalMST {
          * Runs a Breadth-First Search of the graph and prints when each vertex is discovered, when each edge is processed, and when each vertex is visited.
          * @param v the starting vertex of the graph
          */
-        public void bfs(int v) {
+        public void bfs(int v, boolean[] processed) {
 
             //Mark all the vertices as not visited(By default set as false)
-            boolean[] processed = new boolean[vertices];
             boolean[] discovered = new boolean[vertices];
             int[] parent = new int[vertices];
             // Create a queue for BFS
@@ -204,22 +209,26 @@ public class KrushkalMST {
             while (queue.size() != 0) {
                 Edge head = queue.peekFirst();
                 edge = queue.poll(); // Get all adjacent vertices of the dequeued vertex s
-                System.out.println("Process " + edge + " early");
-                processed[edge.getDestination()] = true;
-                Iterator<Edge> i = adjLists[edge.getDestination()].listIterator();
-                while (i.hasNext()) {
-                    Edge n = i.next();
-                    if(!discovered[n.getDestination()]){
-                        queue.add(n);
-                        discovered[n.getDestination()] = true;
-                        parent[n.getDestination()] = n.getSource();
+                //System.out.println("Processed: " + Arrays.toString(processed));
+                if (!processed[edge.getDestination()]) {
+                    System.out.println("Process " + edge + " early");
+                    processed[edge.getDestination()] = true;
+                    Iterator<Edge> i = adjLists[edge.getDestination()].listIterator();
+                    while (i.hasNext()) {
+                        Edge n = i.next();
+                        if (!discovered[n.getDestination()]) {
+                            queue.add(n);
+                            discovered[n.getDestination()] = true;
+                            parent[n.getDestination()] = n.getSource();
+                        }
+                        if ((!processed[n.getDestination()]) || directed) {
+                            processEdgeBFS(n.getSource(), n.getDestination(), parent, discovered, processed);
+                        }
                     }
-                    if((!processed[n.getDestination()]) || directed){
-                        processEdgeBFS(n.getSource(), n.getDestination(), parent, discovered, processed);
-                    }
+                    System.out.println("Process " + edge.getDestination() + " late");
                 }
-                System.out.println("Process " + edge.getDestination() + " late");
             }
+            setAllDiscovered(discovered);
         }
 
         /**
@@ -263,7 +272,15 @@ public class KrushkalMST {
             boolean[] processed = new boolean[vertices];
             int[] parent =  new int[vertices]; //parent array
             dfsUtil(start, discovered, processed, parent);
+            processed[start] = true;
             System.out.println("Process " + start + " late ");
+            for (int i = 0; i < discovered.length; i++) {
+                if(!discovered[i]) {
+                    dfsUtil(i, discovered, processed, parent);
+                    System.out.println("Process " + i + " late ");
+                }
+            }
+
         }
 
 
@@ -282,8 +299,8 @@ public class KrushkalMST {
                     processed[v] = true;
                     dfsUtil(n.getDestination(), visited, processed, parent);
                     System.out.println("Process " + n + " late ");
-                } else if((!processed[n.getSource()])|| directed) {
-                    if(!getDirected()) {
+                } else if ((!processed[n.getSource()]) || directed) {
+                    if (!getDirected()) {
                         if (parent[n.getSource()] != n.getDestination() && parent[n.getDestination()] == 0) {
                             System.out.println("Process edge " + n.getSource() + " " + n + " (Back Edge)");
                         }
@@ -293,8 +310,20 @@ public class KrushkalMST {
 
                 }
             }
+
         }
 
+
+        public boolean isDisjointed() {
+            boolean disjointed = false;
+            for(int i = 0; i < adjLists.length; i++) {
+                LinkedList <Edge> list = adjLists[i];
+                if(list.size() == 0) {
+                    disjointed = true;
+                }
+            }
+            return disjointed;
+        }
 
 
 
@@ -377,7 +406,7 @@ public class KrushkalMST {
     } //ends graph class
 
     public static void main(String[] args) {
-        File file = new File("./src/CS335/test3.txt"); //create file
+        File file = new File("./src/CS335/test.txt"); //create file
         int vertices = 0; //number of vertices
 
         Graph graph = new Graph(); //create a graph
@@ -465,12 +494,20 @@ public class KrushkalMST {
                         break;
 
                     case 2:
-                        graph.bfs(0); //call bfs
+                        boolean[] processed = new boolean[vertices];
+                        graph.bfs(0, processed); //call bfs
+                        processed = graph.getAllDiscovered();
+                        for(int i = 0; i < processed.length; i++) {
+                            if(!processed[i]) {
+                                //System.out.println("BFS Discovered: " + Arrays.toString(processed));
+                                graph.bfs(i, processed);
+                            }
+                        }
                         System.out.println();
                         break;
 
                     case 3:
-                        graph.dfs(0); //call dfs
+                        graph.dfs(0);
                         System.out.println();
                         break;
 
